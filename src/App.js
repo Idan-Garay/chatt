@@ -9,6 +9,7 @@ import {
   useHistory
 } from "react-router-dom";
 
+import Button from "./Button";
 //pages
 import Chat from "./Chat";
 
@@ -49,28 +50,29 @@ function App() {
 
   return (
     <div>
-        <Switch>
+      <nav className="flex justify-between">
+        <h1>
+          Chatt
+        </h1>
 
-          <Route exact path="/">
-            { user 
-            ? (<Redirect to="/chat" />)
-            : <button 
-                onClick={signInWithGoogle}
-              >
-                Sign in with Google
-              </button>
-            }
-          </Route>
-          
-          <Route to="/chat">
-            <Chat />
-              <button
-                onClick={signOut}
-              >
-                Sign out
-              </button>
-          </Route>
-        </Switch>
+        { user
+          ? <Button handleClick={signOut} children="Sign Out" />
+          : <Button handleClick={signInWithGoogle} children="Sign in via Google" />
+        }
+      </nav>
+      <Switch>
+
+        <Route exact path="/">
+          { user 
+          ? (<Redirect to="/chat" />)
+          : null
+          }
+        </Route>
+        
+        <Route to="/chat">
+          <Chat />
+        </Route>
+      </Switch>
     </div>
   );
 }
