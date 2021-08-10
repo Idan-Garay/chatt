@@ -50,8 +50,8 @@ function App() {
 
   return (
     <div>
-      <nav className="flex justify-between">
-        <h1>
+      <nav className="flex justify-between p-2 border">
+        <h1 className=" text-green-400 font-bold text-3xl">
           Chatt
         </h1>
 
