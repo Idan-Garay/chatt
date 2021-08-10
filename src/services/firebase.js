@@ -1,6 +1,7 @@
 import {initializeApp} from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
+// eslint-disable-next-line no-unused-vars
 var firebaseApp = initializeApp({
   apiKey: "AIzaSyD5EmGtwXpxRCA2zNkOQTjgRtNVbd_Zkvk",
   authDomain: "chatt-8b658.firebaseapp.com",
