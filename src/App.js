@@ -1,5 +1,6 @@
 import { useState } from "react";
-import {auth} from "./firebase";
+import {GoogleAuthProvider, getAuth, signInWithPopup, signOut} from "firebase/auth";
+
 import {
   BrowserRouter as Router,
   Link,
@@ -23,12 +24,14 @@ function App() {
   const [user, setUser] = useState(null);
   const [redirect, setRedirect] = useState(false);
   const history = useHistory();
+  const auth = getAuth();
 
   const signInWithGoogle = () => {
-    const provider = new auth.GoogleAuthProvider();
-    auth().useDeviceLanguage();
 
-    auth().signInWithPopup(provider)
+    const provider = new GoogleAuthProvider();
+    auth.useDeviceLanguage();
+
+    signInWithPopup(auth, provider)
       .then(res => {
         const data = res.user;
         setUser(data);
@@ -39,7 +42,7 @@ function App() {
 
   const signOut = () => {
     console.log("clicked");
-    const res = auth().signOut()
+    const res = signOut(auth)
                   .then(res => {
                     if (res === undefined) {
                       setUser(null);
