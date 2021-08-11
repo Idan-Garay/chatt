@@ -53,33 +53,38 @@ export default function Channel() {
   //   }
 
   useEffect(() => {
-    getQueryData();
+    const controller = new AbortController();
+    getQueryData()
+    return () =>  controller.abort();
   }, []);
 
-  console.log(messages);
-
   return (
-    <div className="bg-green-200 h-full flex flex-col justify-start items-end p-2">
-      {
-        messages
-        ? messages.map(data => (<Message text={data.text} />) )
-        : "Loading ..."
-      }
+    <>
+      <div className="h-5/6 bg-green-200">
+        <div className=" h-full flex flex-col overflow-y-scroll justify-start items-end p-5">
+          {
+            messages
+            ? messages.map(data => (<Message key={data.id} text={data.text} />) )
+            : "Loading ..."
+          }
+        </div>
+      </div>
       <form
         onSubmit={() => {}}
-        className="h-12 p-1 w-1/3 mx-auto bg-green-300 rounded border-2 border-green-900 flex"
+        className=" h-20 flex flex-col justify-center border-2  rounded border-green-900 bg-green-300 mt-3"
       >
-        <input type="text"
-          className="bg-transparent placeholder-gray-700 w-5/6 mr-1 p-1"
-          placeholder="type text here..."
-        />
-
-        <button 
-          className="text-white font-extrabold tracking-wider px-2 w-auto"
-        >
-          Send
-        </button>
+        <div className="h-12 p-1 w-1/3 mx-auto bg-white rounded border-2 border-green-900 flex">
+          <input type="text"
+            className="bg-transparent placeholder-gray-700 w-5/6 mr-1 p-1"
+            placeholder="type text here..."
+          />
+          <button 
+            className="text-green-900 font-extrabold tracking-wider px-2 w-auto"
+          >
+            Send
+          </button>
+        </div>
       </form>
-    </div>
+    </>
   )
 }

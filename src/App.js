@@ -22,10 +22,13 @@ const AppWrapper = () => (
 export default  AppWrapper
 function App() {
   const [user, setUser] = useState(null);
-  const [redirect, setRedirect] = useState(false);
   const history = useHistory();
   const auth = getAuth();
 
+  if (!auth.currentUser) {
+    history.push("/");
+  }
+    
   const signInWithGoogle = () => {
 
     const provider = new GoogleAuthProvider();
@@ -41,7 +44,6 @@ function App() {
   }
 
   const signOut = () => {
-    console.log("clicked");
     const res = signOut(auth)
                   .then(res => {
                     if (res === undefined) {
@@ -49,10 +51,11 @@ function App() {
                       history.push("/");
                     }
                   })
+                  .catch(console.log);
   }
 
   return (
-    <div>
+    <div className="h-screen bg-green-200">
       <nav className="flex justify-between p-2 border">
         <h1 className=" text-green-400 font-bold text-3xl">
           Chatt
