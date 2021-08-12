@@ -1,15 +1,16 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "firebase/database";
 import db from "./firebase";
 import Message from "./Message";
 import { doc, query, orderBy, limit, collection, getDocs, addDoc } from "firebase/firestore";
 
 
-export default function Channel() {
+export default function Channel({name}) {
   const [messages, setMessages] = useState([]);
   const messagesRef = collection(db, "messages");
-  const [newMessage, setNewMessage] = useState("")
+  const [newMessage, setNewMessage] = useState("");
+  const scrollRef = useRef();
 
   // const unsub = onSnapshot(collection(db, "messages"),
   //   doc => {
@@ -38,7 +39,7 @@ export default function Channel() {
     e.preventDefault();
     await addDoc(collection(db, "messages"), {
       text: newMessage,
-      date: new Date().toLocaleDateString()
+      date: new Date().toLocaleString()
     })
     setNewMessage("");
     getQueryData();
@@ -46,14 +47,17 @@ export default function Channel() {
 
   useEffect(() => {
     const controller = new AbortController();
-    getQueryData()
+    getQueryData();
     return () =>  controller.abort();
   }, []);
 
   return (
     <>
-      <div className="h-5/6 bg-green-200">
-        <div className=" h-full flex flex-col overflow-y-scroll justify-start items-end p-5">
+      <div className="h-5/6 bg-green-200 flex flex-col">
+        <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5">
+          {name}
+        </div>
+        <div ref={scrollRef} name="oof" className="flex-grow-4 flex flex-col overflow-y-scroll justify-start items-end p-5">
           {
             messages
             ? messages.map(data => (<Message key={data.id} text={data.text} />) )

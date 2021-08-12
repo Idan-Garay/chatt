@@ -40,12 +40,12 @@ function App() {
       .then(res => {
         const data = res.user;
         setUser(data);
+        history.push("/chat");
       })
-      .then()
       .catch(console.log)
   }
 
-  const signOut = () => {
+  const signOutt = () => {
     const res = signOut(auth)
                   .then(res => {
                     if (res === undefined) {
@@ -66,7 +66,7 @@ function App() {
         </h1>
 
         { user
-          ? <Button handleClick={signOut} children="Sign Out" />
+          ? <Button handleClick={signOutt} children="Sign Out" />
           : <Button handleClick={signInWithGoogle} children="Sign in via Google" />
         }
       </nav>
@@ -83,7 +83,7 @@ function App() {
         </Route>
 
         <Route path="/chat">
-          <Chat />
+          <Chat name={name}/>
         </Route>
 
         <Route path="user">
