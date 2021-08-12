@@ -13,6 +13,7 @@ import {
 import Button from "./Button";
 //pages
 import Chat from "./Chat";
+import ChatUser from "./ChatUser";
 
 const AppWrapper = () => (
   <Router>
@@ -22,6 +23,7 @@ const AppWrapper = () => (
 export default  AppWrapper
 function App() {
   const [user, setUser] = useState(null);
+  const [name, setName] = useState("");
   const history = useHistory();
   const auth = getAuth();
 
@@ -58,7 +60,9 @@ function App() {
     <div className="h-screen bg-green-200">
       <nav className="flex justify-between p-2 border">
         <h1 className=" text-green-400 font-bold text-3xl">
-          Chatt
+          <Link to="/">
+            Chatt
+          </Link>
         </h1>
 
         { user
@@ -66,17 +70,23 @@ function App() {
           : <Button handleClick={signInWithGoogle} children="Sign in via Google" />
         }
       </nav>
+
+        
       <Switch>
 
         <Route exact path="/">
-          { user 
+          {/* { user 
           ? (<Redirect to="/chat" />)
           : null
-          }
+          } */}
+          <ChatUser name={name} setName={setName} />
         </Route>
-        
-        <Route to="/chat">
+
+        <Route path="/chat">
           <Chat />
+        </Route>
+
+        <Route path="user">
         </Route>
       </Switch>
     </div>
