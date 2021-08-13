@@ -6,6 +6,9 @@ export default function ChatUser({name, setName, user}) {
 
   const handleSubmit = e => {
     e.preventDefault();
+    if (!name)
+      return;
+      
     history.push("/chat");
   }
 
@@ -24,7 +27,8 @@ export default function ChatUser({name, setName, user}) {
               value={name}
               onChange={e => setName(e.target.value)}
             />
-            <button className="bg-green-700 text-white h-8 px-2 rounded border-2 border-green-900">
+            <button
+            className="bg-green-700 text-white h-8 px-2 rounded border-2 border-green-900">
               Chat 
             </button>
           </div>
