@@ -17,8 +17,8 @@ export default function Channel(props) {
   const [messages, setMessages] = useState([]);
   // const messagesRef = collection(db, "messages");
   const [newMessage, setNewMessage] = useState("");
-  const scrollRef = useRef();
   const mRef = useRef(messages);
+  const cRef = collection(db, "message");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export default function Channel(props) {
       receiver: props.receiver,
       sender: props.sender,
     }
-    await addDoc(collection(db, "message"), data)
+    await addDoc(cRef, data)
     setNewMessage("");
     // getQueryData();
   }
@@ -42,7 +42,6 @@ export default function Channel(props) {
   });
 
   useEffect(() => {
-    const cRef = collection(db, "message");
     const q = query(cRef, orderBy("date", "asc"), limit(20));
     const unsubscribe = onSnapshot(q, (doc) => {
       const newMessages = [];
@@ -79,7 +78,7 @@ export default function Channel(props) {
         <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5 py-2">
           {props.receiver}
         </div>
-        <div ref={scrollRef} name="oof" className="flex-grow-4 border-t-2 border-green-900 flex flex-col overflow-y-auto min-h-5/6 justify-start items-end p-5">
+        <div name="oof" className="flex-grow-4 border-t-2 border-green-900 flex flex-col overflow-y-auto min-h-5/6 justify-start items-end p-5">
           {
             messages
             ? messages.map(data => (<Message key={data.id} text={data.text} />) )
@@ -93,7 +92,8 @@ export default function Channel(props) {
       >
         <div className="h-12 p-1 w-1/3 mx-auto bg-white rounded border-2 border-green-900 flex">
           <input type="text"
-            className="bg-transparent placeholder-gray-700 w-5/6 mr-1 p-1"
+            className="bg-transparent placeholder-gray-700 w-5/6 mr-1 p-1
+             outline-none"
             placeholder="type text here..."
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
