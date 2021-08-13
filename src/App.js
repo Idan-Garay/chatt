@@ -57,8 +57,8 @@ function App() {
   
   return (
     <div className="h-screen bg-green-200">
-      <nav className="flex justify-between p-2 border">
-        <h1 className=" text-green-400 font-bold text-3xl">
+      <nav className="flex justify-between p-2 bg-green-500">
+        <h1 className=" text-white font-bold text-3xl">
           <Link to="/">
             Chatt
           </Link>
@@ -70,7 +70,6 @@ function App() {
         }
       </nav>
 
-        
       {
         user?
         <Switch>

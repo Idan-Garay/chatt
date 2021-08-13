@@ -89,7 +89,7 @@ export default function Channel(props) {
       </div>
       <form 
         onSubmit={handleSubmit}
-        className=" h-20 flex flex-col justify-center border-2  rounded border-green-900 bg-green-300 mt-3"
+        className=" h-20 flex flex-col justify-center border-2  rounded border-green-900 bg-green-400 mt-3"
       >
         <div className="h-12 p-1 w-1/3 mx-auto bg-white rounded border-2 border-green-900 flex">
           <input type="text"
