@@ -76,10 +76,10 @@ export default function Channel(props) {
   return (
     <>
       <div className="h-5/6 bg-green-200 flex flex-col">
-        <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5">
+        <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5 py-2">
           {props.receiver}
         </div>
-        <div ref={scrollRef} name="oof" className="flex-grow-4 flex flex-col overflow-y-auto min-h-full justify-start items-end p-5">
+        <div ref={scrollRef} name="oof" className="flex-grow-4 border-t-2 border-green-900 flex flex-col overflow-y-auto min-h-5/6 justify-start items-end p-5">
           {
             messages
             ? messages.map(data => (<Message key={data.id} text={data.text} />) )

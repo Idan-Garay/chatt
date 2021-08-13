@@ -1,7 +1,3 @@
-import { useState } from "react"
-import {
-  Redirect
-} from "react-router-dom";
 
 import { useHistory } from "react-router-dom";
 
@@ -15,10 +11,8 @@ export default function ChatUser({name, setName, user}) {
 
   return (
     <div className="bg-green-50 border-2 w-1/4 rounded mx-auto border-green-700">
-
       <fieldset>
         <form
-          
           className="max-w-2/3 w-auto border-blue-400 border flex"
           onSubmit={handleSubmit}
         >
