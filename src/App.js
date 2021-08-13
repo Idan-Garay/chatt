@@ -19,42 +19,41 @@ const AppWrapper = () => (
     <App />
   </Router>
 )
-export default  AppWrapper
 function App() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
   const history = useHistory();
   const auth = getAuth();
-
+  
   if (!auth.currentUser) {
     history.push("/");
   }
-    
+  
   const signInWithGoogle = () => {
-
+    
     const provider = new GoogleAuthProvider();
     auth.useDeviceLanguage();
-
+    
     signInWithPopup(auth, provider)
-      .then(res => {
-        const data = res.user;
-        setUser(data);
-        history.push("/");
-      })
-      .catch(console.log)
+    .then(res => {
+      const data = res.user;
+      setUser(data);
+      history.push("/");
+    })
+    .catch(console.log)
   }
-
+  
   const signOutt = () => {
     signOut(auth)
-      .then(res => {
-        if (res === undefined) {
-          setUser(null);
-          history.push("/");
-        }
-      })
-      .catch(console.log);
+    .then(res => {
+      if (res === undefined) {
+        setUser(null);
+        history.push("/");
+      }
+    })
+    .catch(console.log);
   }
-
+  
   return (
     <div className="h-screen bg-green-200">
       <nav className="flex justify-between p-2 border">
@@ -72,8 +71,8 @@ function App() {
 
         
       {
-      user?
-      <Switch>
+        user?
+        <Switch>
 
         <Route exact path="/">
           { user
@@ -90,7 +89,9 @@ function App() {
         </Route>
       </Switch>
       : <h1 className="text-red-500 text-2xl font-bold bg-white rounded w-1/3 py-5 mx-auto text-center">Login First</h1>
-      }
+    }
     </div>
   );
 }
+
+export default  AppWrapper
