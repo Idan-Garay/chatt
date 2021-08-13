@@ -79,11 +79,11 @@ function App() {
           ? (<Redirect to="/chat" />)
           : null
           } */}
-          <ChatUser name={name} setName={setName} />
+          <ChatUser name={name} setName={setName} user={user} />
         </Route>
 
         <Route path="/chat">
-          <Chat name={name}/>
+          <Chat sender={auth.currentUser.displayName} receiver={name}/>
         </Route>
 
         <Route path="user">

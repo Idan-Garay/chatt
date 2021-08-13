@@ -14,7 +14,7 @@ import { doc,
 } from "firebase/firestore";
 
 
-export default function Channel({name}) {
+export default function Channel({sender, receiver}) {
   const [messages, setMessages] = useState([]);
   // const messagesRef = collection(db, "messages");
   const [newMessage, setNewMessage] = useState("");
@@ -62,11 +62,13 @@ export default function Channel({name}) {
 
       doc.docChanges().forEach(change => {
         if (change.type === "added") {
-          const {text, date} = change.doc.data();
+          const {text, date_created} = change.doc.data();
           newMessages.push({
             id: change.doc.id,
+            receiver: receiver,
+            sender: sender,
             text: text,
-            date: date
+            date: date_created
           });
         }
       });
@@ -85,7 +87,7 @@ export default function Channel({name}) {
     <>
       <div className="h-5/6 bg-green-200 flex flex-col">
         <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5">
-          {name}
+          {receiver}
         </div>
         <div ref={scrollRef} name="oof" className="flex-grow-4 flex flex-col overflow-y-scroll justify-start items-end p-5">
           {
