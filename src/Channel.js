@@ -3,37 +3,38 @@ import { useEffect, useState, useRef } from "react";
 import "firebase/database";
 import db from "./firebase";
 import Message from "./Message";
-import { doc, query, orderBy, limit, collection, getDocs, addDoc } from "firebase/firestore";
+import { doc,
+  query, 
+  orderBy, 
+  limit, 
+  collection, 
+  getDocs, 
+  addDoc, 
+  onSnapshot 
+} from "firebase/firestore";
 
 
 export default function Channel({name}) {
   const [messages, setMessages] = useState([]);
-  const messagesRef = collection(db, "messages");
+  // const messagesRef = collection(db, "messages");
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef();
 
-  // const unsub = onSnapshot(collection(db, "messages"),
-  //   doc => {
-  //     console.log("current data: ", doc.data);
-  //     setMessages(doc.data);
-  //   }
-  // );
+  // const getQueryData = async () => {
+  //   const q = query(messagesRef, orderBy("date", "desc"), limit(100));
+  //   const querySnapshot = await getDocs(q);
 
-  const getQueryData = async () => {
-    const q = query(messagesRef, orderBy("date", "asc"), limit(100));
-    const querySnapshot = await getDocs(q);
-
-    setMessages(querySnapshot.docs.map(doc => {
-      const {text, date} = doc.data();
-        return {
-          id: doc.id,
-          text: text,
-          date: new Date(date).toLocaleTimeString()
-        }
-      }
-     )
-    );
-  };
+  //   setMessages(querySnapshot.docs.map(doc => {
+  //     const {text, date} = doc.data();
+  //       return {
+  //         id: doc.id,
+  //         text: text,
+  //         date: new Date(date).toLocaleTimeString()
+  //       }
+  //     }
+  //    )
+  //   );
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,13 +43,42 @@ export default function Channel({name}) {
       date: new Date().toLocaleString()
     })
     setNewMessage("");
-    getQueryData();
+    // getQueryData();
   }
 
   useEffect(() => {
     const controller = new AbortController();
-    getQueryData();
+    // getQueryData();
+    
     return () =>  controller.abort();
+  });
+
+  const mRef = useRef(messages);
+  useEffect(() => {
+    const cRef = collection(db, "messages");
+    const q = query(cRef, orderBy("date", "desc"), limit(20));
+    const unsubscribe = onSnapshot(q, (doc) => {
+      const newMessages = [];
+
+      doc.docChanges().forEach(change => {
+        if (change.type === "added") {
+          const {text, date} = change.doc.data();
+          newMessages.push({
+            id: change.doc.id,
+            text: text,
+            date: date
+          });
+        }
+      });
+
+      mRef.current = mRef.current.length === newMessages.length? mRef.current: mRef.current.concat(newMessages);
+      setMessages(mRef.current);
+    });
+
+    return () => {
+      unsubscribe();
+      
+    }
   }, []);
 
   return (
@@ -65,7 +95,7 @@ export default function Channel({name}) {
           }
         </div>
       </div>
-      <form
+      <form 
         onSubmit={handleSubmit}
         className=" h-20 flex flex-col justify-center border-2  rounded border-green-900 bg-green-300 mt-3"
       >
