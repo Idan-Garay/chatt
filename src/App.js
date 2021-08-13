@@ -6,7 +6,6 @@ import {
   Link,
   Switch,
   Route,
-  Redirect,
   useHistory
 } from "react-router-dom";
 
@@ -46,14 +45,14 @@ function App() {
   }
 
   const signOutt = () => {
-    const res = signOut(auth)
-                  .then(res => {
-                    if (res === undefined) {
-                      setUser(null);
-                      history.push("/");
-                    }
-                  })
-                  .catch(console.log);
+    signOut(auth)
+      .then(res => {
+        if (res === undefined) {
+          setUser(null);
+          history.push("/");
+        }
+      })
+      .catch(console.log);
   }
 
   return (

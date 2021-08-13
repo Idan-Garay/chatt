@@ -10,7 +10,6 @@ export default function ChatUser({name, setName, user}) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log("Name submitted: " + name);
     setRedirect(true);
     //redirected to a channel with the user
   }

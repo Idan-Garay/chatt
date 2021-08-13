@@ -66,7 +66,7 @@ export default function Channel(props) {
       mRef.current = mRef.current.length === newMessages.length? mRef.current: mRef.current.concat(newMessages);
       setMessages(mRef.current);
     }, [mRef.current.length]);
-    console.table(mRef.current);
+
     return () => {
       unsubscribe();
       setMessages([]);
