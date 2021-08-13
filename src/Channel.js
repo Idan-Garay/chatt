@@ -22,6 +22,7 @@ export default function Channel(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const date = new Date().toLocaleString();
     const data = {
       text: newMessage,
@@ -31,7 +32,6 @@ export default function Channel(props) {
     }
     await addDoc(cRef, data)
     setNewMessage("");
-    // getQueryData();
   }
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function Channel(props) {
       </div>
       <form 
         onSubmit={handleSubmit}
-        className=" h-20 flex flex-col justify-center border-2  rounded border-green-900 bg-green-400 mt-3"
+        className=" h-20 flex flex-col justify-center border-2 rounded border-green-900 bg-green-400 mt-3"
       >
         <div className="h-12 p-1 w-1/3 mx-auto bg-white rounded border-2 border-green-900 flex">
           <input type="text"
@@ -97,9 +97,11 @@ export default function Channel(props) {
             placeholder="type text here..."
             value={newMessage}
             onChange={e => setNewMessage(e.target.value)}
-          />
+          /> 
           <button 
-            className="text-green-900 font-extrabold tracking-wider px-2 w-auto"
+            className="disabled:text-gray-600
+            text-green-900 font-extrabold outline-none tracking-wider px-2 w-auto"
+            disabled={!newMessage}
           >
             Send
           </button>
