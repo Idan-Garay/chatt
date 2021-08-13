@@ -3,45 +3,33 @@ import { useEffect, useState, useRef } from "react";
 import "firebase/database";
 import db from "./firebase";
 import Message from "./Message";
-import { doc,
+import {
   query, 
   orderBy, 
   limit, 
   collection, 
-  getDocs, 
   addDoc, 
   onSnapshot 
 } from "firebase/firestore";
 
 
-export default function Channel({sender, receiver}) {
+export default function Channel(props) {
   const [messages, setMessages] = useState([]);
   // const messagesRef = collection(db, "messages");
   const [newMessage, setNewMessage] = useState("");
   const scrollRef = useRef();
-
-  // const getQueryData = async () => {
-  //   const q = query(messagesRef, orderBy("date", "desc"), limit(100));
-  //   const querySnapshot = await getDocs(q);
-
-  //   setMessages(querySnapshot.docs.map(doc => {
-  //     const {text, date} = doc.data();
-  //       return {
-  //         id: doc.id,
-  //         text: text,
-  //         date: new Date(date).toLocaleTimeString()
-  //       }
-  //     }
-  //    )
-  //   );
-  // };
+  const mRef = useRef(messages);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDoc(collection(db, "messages"), {
+    const date = new Date().toLocaleString();
+    const data = {
       text: newMessage,
-      date: new Date().toLocaleString()
-    })
+      date: date,
+      receiver: props.receiver,
+      sender: props.sender,
+    }
+    await addDoc(collection(db, "message"), data)
     setNewMessage("");
     // getQueryData();
   }
@@ -53,33 +41,35 @@ export default function Channel({sender, receiver}) {
     return () =>  controller.abort();
   });
 
-  const mRef = useRef(messages);
   useEffect(() => {
-    const cRef = collection(db, "messages");
-    const q = query(cRef, orderBy("date", "desc"), limit(20));
+    const cRef = collection(db, "message");
+    const q = query(cRef, orderBy("date", "asc"), limit(20));
     const unsubscribe = onSnapshot(q, (doc) => {
       const newMessages = [];
 
       doc.docChanges().forEach(change => {
         if (change.type === "added") {
-          const {text, date_created} = change.doc.data();
-          newMessages.push({
-            id: change.doc.id,
-            receiver: receiver,
-            sender: sender,
-            text: text,
-            date: date_created
-          });
+          const {text, date_created, receiver, sender} = change.doc.data();
+          
+          if (receiver === props.receiver && sender === props.sender) {
+            newMessages.push({
+              id: change.doc.id,
+              receiver: props.receiver,
+              sender: props.sender,
+              text: text,
+              date: date_created
+            });
+          }
         }
       });
 
       mRef.current = mRef.current.length === newMessages.length? mRef.current: mRef.current.concat(newMessages);
       setMessages(mRef.current);
-    });
-
+    }, [mRef.current.length]);
+    console.table(mRef.current);
     return () => {
       unsubscribe();
-      
+      setMessages([]);
     }
   }, []);
 
@@ -87,9 +77,9 @@ export default function Channel({sender, receiver}) {
     <>
       <div className="h-5/6 bg-green-200 flex flex-col">
         <div className="font-bold tracking-wide text-green-800 text-right text-3xl mr-5">
-          {receiver}
+          {props.receiver}
         </div>
-        <div ref={scrollRef} name="oof" className="flex-grow-4 flex flex-col overflow-y-scroll justify-start items-end p-5">
+        <div ref={scrollRef} name="oof" className="flex-grow-4 flex flex-col overflow-y-auto min-h-full justify-start items-end p-5">
           {
             messages
             ? messages.map(data => (<Message key={data.id} text={data.text} />) )

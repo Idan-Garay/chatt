@@ -40,7 +40,7 @@ function App() {
       .then(res => {
         const data = res.user;
         setUser(data);
-        history.push("/chat");
+        history.push("/");
       })
       .catch(console.log)
   }
@@ -72,14 +72,15 @@ function App() {
       </nav>
 
         
+      {
+      user?
       <Switch>
 
         <Route exact path="/">
-          {/* { user 
-          ? (<Redirect to="/chat" />)
-          : null
-          } */}
-          <ChatUser name={name} setName={setName} user={user} />
+          { user
+            ?<ChatUser name={name} setName={setName} user={user} />
+            : null
+          }
         </Route>
 
         <Route path="/chat">
@@ -89,6 +90,8 @@ function App() {
         <Route path="user">
         </Route>
       </Switch>
+      : <h1 className="text-red-500 text-2xl font-bold bg-white rounded w-1/3 py-5 mx-auto text-center">Login First</h1>
+      }
     </div>
   );
 }
