@@ -19,6 +19,7 @@ const AppWrapper = () => (
     <App />
   </Router>
 )
+
 function App() {
   const [user, setUser] = useState(null);
   const [name, setName] = useState("");
@@ -73,22 +74,21 @@ function App() {
       {
         user?
         <Switch>
+          <Route exact path="/">
+            { user
+              ?<ChatUser name={name} setName={setName} user={user} />
+              : null
+            }
+          </Route>
 
-        <Route exact path="/">
-          { user
-            ?<ChatUser name={name} setName={setName} user={user} />
-            : null
-          }
-        </Route>
+          <Route path="/chat">
+            <Chat sender={auth.currentUser.displayName} receiver={name}/>
+          </Route>
 
-        <Route path="/chat">
-          <Chat sender={auth.currentUser.displayName} receiver={name}/>
-        </Route>
-
-        <Route path="user">
-        </Route>
-      </Switch>
-      : <h1 className="text-red-500 text-2xl font-bold bg-white rounded w-1/3 py-5 mx-auto text-center">Login First</h1>
+        </Switch>
+      : <h1 className="text-red-500 text-2xl font-bold bg-white rounded w-1/3 py-5 mx-auto text-center">
+          Login First
+        </h1>
     }
     </div>
   );

@@ -1,34 +1,22 @@
-import { useState, useRef } from "react"
+import { useState } from "react"
 import {
   Redirect
 } from "react-router-dom";
-import { useEffect } from "react/cjs/react.development";
+
+import { useHistory } from "react-router-dom";
 
 export default function ChatUser({name, setName, user}) {
-  const [redirect, setRedirect] = useState(false);
-  const formRef = useRef();
+  const history = useHistory();
 
   const handleSubmit = e => {
     e.preventDefault();
-    setRedirect(true);
-    //redirected to a channel with the user
+    history.push("/chat");
   }
-
-  useEffect(() => {
-    if (!user) {
-      formRef.current.disabled = true;
-    }
-  }, [user])
 
   return (
     <div className="bg-green-50 border-2 w-1/4 rounded mx-auto border-green-700">
 
-      {
-        redirect
-        ? <Redirect to="/chat" />
-        : null
-      }
-      <fieldset ref={formRef}>
+      <fieldset>
         <form
           
           className="max-w-2/3 w-auto border-blue-400 border flex"
