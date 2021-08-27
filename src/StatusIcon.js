@@ -1,7 +1,8 @@
+import { Children } from "react";
 
-const StatusIcon = (connected) => {
+const StatusIcon = ({children, connected}) => {
   return (
-    <i class={connected? 'icon connected': 'icon'}></i>
+    <i class={connected? 'icon connected': 'icon'}>{...children}</i>
   );
 }
 

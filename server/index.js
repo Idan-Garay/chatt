@@ -32,6 +32,19 @@ io.use((socket, next) => {
   next();
 });
 
+// send all existing users to client
+io.on("connection", (socket) => {
+  const users = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    users.push({
+      userID: id,
+      username: socket.username,
+    });
+  }
+  socket.emit("users", users);
+  // ...
+});
+
 // http.listen(3000, function() {
 //   console.log('listening on port 3000')
 // }) 1

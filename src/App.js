@@ -1,5 +1,5 @@
 import TextField from "@material-ui/core/TextField"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectUser from "./SelectUser";
 import socket from './socket';
 
@@ -13,11 +13,15 @@ const App = () => {
 		socket.connect();
 	}
 
-	socket.on("connect_error", (err) => {
-		if (err.message === "invalid username") {
-			setIsUserSelected(false)
-		}
-	});
+	useEffect(() => {
+		socket.on("connect_error", (err) => {
+			if (err.message === "invalid username") {
+				setIsUserSelected(false)
+			}
+		});
+
+		return () => socket.off('connect_error');
+	})
 
 	return (
 		<div>
