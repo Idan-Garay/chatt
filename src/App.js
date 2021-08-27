@@ -9,12 +9,20 @@ const App = () => {
 
 	const onUsernameSelection = (username) => {
 		setIsUserSelected(true);
-		socket.auth = {username: username}
+		socket.auth = {username};
+		socket.connect();
 	}
+
+	socket.on("connect_error", (err) => {
+		if (err.message === "invalid username") {
+			setIsUserSelected(false)
+		}
+	});
 
 	return (
 		<div>
-			<SelectUser onSelect={onUsernameSelection}/>
+			<SelectUser onSelect={onUsernameSelection} onTextChange={e => setUsername(e.target.value)} />
+
 		</div>
 	)
 }

@@ -1,10 +1,13 @@
 import TextField from '@material-ui/core/TextField';
 
 
-const SelectUser = () => {
+const SelectUser = ({onSelect, onTextChange}) => {
   return (
-    <form>
-      <TextField required id="standard-required" label="Required" defaultValue="Hello World" />
+    <form
+      onSubmit={onSelect}
+    >
+      <TextField required id="standard-required" onChange={onTextChange} label="Required" placeholder="John Doe" />
+      <button>Submit User</button>
     </form>
   )
 }
