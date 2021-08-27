@@ -1,60 +1,66 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import TextField from "@material-ui/core/TextField";
-import "./App.css";
-
-const socket = io();
+import TextField from "@material-ui/core/TextField"
+import React, { useEffect, useRef, useState } from "react"
+import io from "socket.io-client"
+import "./App.css"
 
 function App() {
-  const [state, setState] = useState({ message: "", name: "" });
-  const [chat, setChat] = useState([]);
+	const [ state, setState ] = useState({ message: "", name: "" })
+	const [ chat, setChat ] = useState([])
 
-  useEffect(() => {
-    socket.on('message', ({name, message}) => {
-      setChat([...chat, {name, message}])
-    })
-  })
+	const socketRef = useRef()
 
-  const renderChat = () => {
-    return chat.map(({ name, message }, index) => (
-      <div key={index}>
-        <h3>
-          {name}: <span>{message}</span>
-        </h3>
-      </div>
-    ));
-  };
+	useEffect(
+		() => {
+			socketRef.current = io.connect("http://localhost:3000")
+			socketRef.current.on("message", ({ name, message }) => {
+				setChat([ ...chat, { name, message } ])
+			})
+			return () => socketRef.current.disconnect()
+		},
+		[ chat ]
+	)
 
-  const onTextChange = e => {
-    setState({...state, [e.target.name]: e.target.value})
-  }
+	const onTextChange = (e) => {
+		setState({ ...state, [e.target.name]: e.target.value })
+	}
 
-  const onMessageSubmit = e => {
-    e.preventDefault();
-    const {name, message} = state;
-    socket.emit('message', {name, message})
-    setState({message: ''});
-  }
+	const onMessageSubmit = (e) => {
+		const { name, message } = state
+		socketRef.current.emit("message", { name, message })
+		e.preventDefault()
+		setState({ message: "", name })
+	}
 
+	const renderChat = () => {
+		return chat.map(({ name, message }, index) => (
+			<div key={index}>
+				<h3>
+					{name}: <span>{message}</span>
+				</h3>
+			</div>
+		))
+	}
   return (
-    <div className="App">
-      <form onSubmit={(e) => onTextChange(e)}>
+    <div className="card">
+      <form onSubmit={onMessageSubmit}>
         <h1>Messenger</h1>
         <div className="name-field">
           <TextField
             name="name"
-            onChange={(e) => onTextChange(e)}
+            onChange={onTextChange}
             value={state.name}
             label="Name"
           />
         </div>
 
-        <div className="messsge-field">
+        <div className="message-field">
           <TextField
             name="message"
-            onChange={(e) => onTextChange(e)}
+            onChange={onTextChange}
             value={state.message}
             label="message"
+						id="outlined-multiline-static"
+						variant="outlined"
           />
         </div>
 
