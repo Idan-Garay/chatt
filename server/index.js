@@ -1,53 +1,26 @@
-const httpServer = require("http").createServer();
-const io = require("socket.io")(httpServer, {
+const httpServer = require('http').createServer()
+const io = require('socket.io')(httpServer, {
   cors: {
-    origin: "http://localhost:8080",
-  },
-}); //frontend's http request is allowed to reach the server
-
-io.use((socket, next) => {
-  const username = socket.handshake.auth.username;
-  if (!username) {
-    return next(new Error("invalid username"));
+    origin: 'http://localhost:3000'
   }
-  socket.username = username;
-  next();
-});
+})
 
-io.on("connection", (socket) => {
-  // fetch existing users
-  const users = [];
-  for (let [id, socket] of io.of("/").sockets) {
-    users.push({
-      userID: id,
-      username: socket.username,
-    });
-  }
-  socket.emit("users", users);
+io.on('connection', socket => {
+  console.log(socket.id + ' just connected')
 
-  // notify existing users
-  socket.broadcast.emit("user connected", {
-    userID: socket.id,
-    username: socket.username,
-  });
+  socket.on('disconnect', () => {
+    console.log('a user disconnected')
+  })
 
-  // forward the private message to the right recipient
-  socket.on("private message", ({ content, to }) => {
-    console.log(content);
-    socket.to(to).emit("private message", {
-      content,
-      from: socket.id,
-    });
-  });
+})
 
-  // notify users upon disconnection
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("user disconnected", socket.id);
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
   });
 });
 
-const PORT = process.env.PORT || 3000;
-
-httpServer.listen(PORT, () =>
-  console.log(`server listening at http://localhost:${PORT}`)
-);
+httpServer.listen(3000, () => {
+  console.log('Listening to port 3000')
+})
