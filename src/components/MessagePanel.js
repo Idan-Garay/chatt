@@ -1,5 +1,7 @@
-import { useState } from 'react';
+
+import React, { useState } from 'react'
 import StatusIcon from './StatusIcon'
+import './MessagePanel.css'
 
 export default function MessagePanel({user, onSubmit}) {
   const [input, setInput] = useState('');

@@ -1,6 +1,8 @@
-import StatusIcon from './StatusIcon'
+import './User.css'
+import StatusIcon from './StatusIcon';
 
-export default function User({user, selected, onClick}) {
+const User = ({user, selected, onClick}) => {
+  
   return (
     <div onClick={() => onClick(user)} className={selected ? 'user selected': 'user'}>
       <div className="description">
@@ -18,5 +20,7 @@ export default function User({user, selected, onClick}) {
         :null
       }
     </div>
-  )
+  );
 }
+
+export default User;

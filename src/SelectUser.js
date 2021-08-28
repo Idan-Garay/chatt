@@ -1,14 +1,14 @@
-import TextField from '@material-ui/core/TextField';
+import socket from './socket'
 
+const SelectUser = ({username, onTextChange, onSelect}) => {
 
-const SelectUser = ({onSelect, onTextChange}) => {
   return (
-    <form
-      onSubmit={onSelect}
-    >
-      <TextField required id="standard-required" onChange={onTextChange} label="Required" placeholder="John Doe" />
-      <button>Submit User</button>
-    </form>
+    <div>
+      <form onSubmit={onSelect}>
+        <input type="text" onChange={onTextChange} />
+        <button>Submit</button>
+      </form>
+    </div>
   )
 }
 

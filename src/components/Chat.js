@@ -1,25 +1,30 @@
 import './Chat.css'
-import { useState, useEffect } from 'react'
-import socket from './socket'
-import MessagePanel from './MessagePanel'
-import User from './User'
+import { useState, useEffect } from 'react';
+import socket from './socket';
+import User from './User';
+import MessagePanel from './MessagePanel';
 
-export default function Chat({username}) {
-  const [message, setMessage] = useState('')
-  const [selectedUser, setSelectedUser] = useState(null)
+export default function Chat() {
+  const [selectedUser, setselectedUser] = useState(null);
   const [users, setUsers] = useState([]);
 
-  const onMessage = e => {
-    e.preventDefault();
+  const onMessage = (content) => {
     if (selectedUser) {
-      socket.emit("private message", {username, content: message});
-      setMessage('');
+      socket.emit("private message", {
+        content,
+        to: selectedUser.userID,
+      });
+      selectedUser.messages.push({
+        content,
+        fromSelf: true,
+      });
+      setselectedUser(selectedUser);
     }
   }
 
   const onSelectUser = user => {
     user.hasNewMessages = false;
-    setSelectedUser(user);
+    setselectedUser(user);
   }
 
   useEffect(() => {
@@ -60,7 +65,8 @@ export default function Chat({username}) {
 
     socket.on("user connected", (user) => {
       initReactiveProperties(user);
-      setUsers([...users, user]);
+      users.push(user);
+      setUsers(users);
     });
 
     socket.on("user disconnected", (id) => {
@@ -74,42 +80,37 @@ export default function Chat({username}) {
     });
 
     socket.on("private message", ({ content, from }) => {
-      let i, len;
-      len = users.length;
-
-      for (let i = 0; i < len && users[i].userID === from; i++) {}
-
-      if (i < users.length) {
+      for (let i = 0; i < users.length; i++) {
         const user = users[i];
-        user.messages.push({
-          content,
-          fromSelf: false,
-        });
-        if (user !== selectedUser) {
-          user.hasNewMessages = true;
+        if (user.userID === from) {
+          user.messages.push({
+            content,
+            fromSelf: false,
+          });
+          if (user !== selectedUser) {
+            user.hasNewMessages = true;
+          }
+          break;
         }
-        setUsers()
       }
     });
 
-  })
+  },)
 
   return (
     <div>
       <div className="left-panel">
-      {
-        users.map(({user, selected, onClick}, index) => (
-          <User key={index} selected={selectedUser === user} onClick={() => onSelectUser(user)} />
-        ))
-      }
-      </div>
-      <div className="right-panel">
         {
-          selectedUser
-          ? <MessagePanel user={selectedUser} onSubmit={onMessage} className="right-panel"/>
-          : null
+          users.map(({user, selected, status, connected}, index) => (
+            <User key={index} selected={selectedUser === user} onClick={() => onSelectUser(user)} />
+          ))
         }
       </div>
+      {
+        selectedUser
+        ? <MessagePanel user={selectedUser} onSubmit={onMessage} className="right-panel"/>
+        : null
+      }
     </div>
   )
 }
