@@ -22,20 +22,18 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  const rooms = [];
+  const users = [];
 
   for (let [id, socket] of io.of("/").sockets) {
-    rooms.push({
+    users.push({
       userID: id,
       username: socket.username,
     });
   }
 
-  // socket.emit("users", rooms);
-
   // socket.on("disconnecting", (reason) => {
-  //   for (const room of rooms) {
-  //     if (room !== socket.id) socket.to(room).emit("user has left", socket.id);
+  //   for (const user of users) {
+  //     if (user !== socket.id) socket.to(user).emit("user has left", socket.id);
   //   }
   // });
 
@@ -44,9 +42,9 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("private message", ({ username, message, recipient }) => {
-    recipient = rooms.find((room) => {
-      console.log(room, 2);
-      return room.username === recipient;
+    recipient = users.find((user) => {
+      console.log(user, 2);
+      return user.username === recipient;
     });
 
     io.to(recipient.userID).emit("private message", {
@@ -55,8 +53,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  io.emit("rooms", rooms);
-  console.log(rooms);
+  io.emit("users", users);
+  console.log(users);
 });
 
 server.listen(3000, () => {
