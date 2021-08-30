@@ -1,87 +1,15 @@
-import socket from "./socket";
-import { useState, useEffect, useRef } from "react";
+import { hot } from "react-hot-loader/root";
+import { useState } from "react";
+import Chat from "./components/Chat";
+import "tailwindcss/tailwind.css";
 
-export default function App() {
-  const [message, setMessage] = useState("");
-  const [username, setUsername] = useState("");
-  const [recipient, setRecipient] = useState("");
-  // const [messages, setMessages] = useState([]);
-  const [showChat, setShowChat] = useState(false);
-
-  // const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({ username: "", messages: [] });
-
-  useEffect(() => {
-    socket.on("private message", ({ from, content }) => {
-      user.messages.push({ from, content });
-      setUser({ ...user });
-    });
-  }, [user.messages.length]);
-
-  const sendMessage = (e) => {
-    e.preventDefault();
-
-    socket.username = username;
-    socket.emit("private message", { username, message, recipient });
-    setMessage("");
-  };
-
-  const connectToServer = (e) => {
-    e.preventDefault();
-    socket.auth = { username };
-    socket.connect();
-    setShowChat(true);
-  };
-
+function App() {
+  // const [selectedUser, setselectedUser] = useState(initialState)
   return (
-    <div>
-      <h1>Chat</h1>
-      {showChat ? (
-        <form onSubmit={sendMessage}>
-          <br />
-          <label>
-            {" "}
-            Recipient
-            <input
-              type="text"
-              onChange={(e) => setRecipient(e.target.value)}
-              value={recipient}
-            />
-          </label>
-          <br />
-          <label>
-            Message
-            <input
-              type="text"
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
-            />
-          </label>
-          <button>Submit</button>
-        </form>
-      ) : (
-        <form onSubmit={connectToServer}>
-          <label>
-            {" "}
-            Username
-            <input
-              type="text"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-            />
-            <button>Submit</button>
-          </label>
-        </form>
-      )}
-
-      <div>
-        {user.messages.map((message, index) => (
-          <pre key={index}>
-            {message.from}
-            {message.content}
-          </pre>
-        ))}
-      </div>
+    <div className="border-4 h-screen">
+      <Chat />
     </div>
   );
 }
+
+export default hot(App);
