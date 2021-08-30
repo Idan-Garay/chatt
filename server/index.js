@@ -39,9 +39,9 @@ io.on("connection", (socket) => {
   //   }
   // });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
+  // socket.on("disconnect", () => {
+  //   console.log("user disconnected");
+  // });
 
   socket.on("private message", ({ username, message, recipient }) => {
     recipient = rooms.find((room) => {
