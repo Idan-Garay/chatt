@@ -28,6 +28,7 @@ io.on("connection", (socket) => {
     users.push({
       userID: id,
       username: socket.username,
+      messages: [],
     });
   }
 
@@ -42,10 +43,11 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("private message", ({ username, message, recipient }) => {
-    recipient = users.find((user) => {
-      console.log(user, 2);
+    recipient = users.findIndex((user) => {
       return user.username === recipient;
     });
+
+    recipient.messages.push({ to: recipient, content: message });
 
     io.to(recipient.userID).emit("private message", {
       from: username,
