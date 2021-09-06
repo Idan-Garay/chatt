@@ -7,7 +7,7 @@ export default function Chat({ username }) {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-
+  //flow of user
   const displayUsers = (users) => {
     let filteredUsers = users.filter((user) => user.self === false);
 
@@ -39,6 +39,7 @@ export default function Chat({ username }) {
         {displayUsers(users)}
       </div>
       <MessagePanel
+        user={user}
         selectedUser={selectedUser || { username: "John Doe", messages: [] }}
       />
     </div>
